@@ -1,16 +1,50 @@
-# alquran_digital
+# Alquran Digital
 
-A new Flutter project.
+## Description
+Alquran Digital is a simple Quran app developed using Flutter, integrating the [Equran API](https://equran.id/apidev/v2) to provide access to Quranic verses, chapters, tafsir, and audio.
 
-## Getting Started
+## Features
+- **View Surahs**: List all surahs from the Quran.
+- **View Ayahs**: List ayahs of a selected surah.
+- **View Tafsir**: Read tafsir for each ayah.
+- **Play Audio**: Play audio recitation for each surah.
 
-This project is a starting point for a Flutter application.
+## Project Structure
+```plaintext
+lib/
+├── app/
+│   ├── const/
+│   └── route/
+│   └── view/
+│       └── atom/
+├── bloc/
+├── models/
+├── services/
+└── view/
+    ├── molecule/
+    ├── organism/
+    └── pages/
+pubspec.yaml
+README.md
+```
 
-A few resources to get you started if this is your first Flutter project:
+## API Integration
+This app uses the Equran API to fetch Quranic data. The API endpoints include:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- /api/v2/surat: Get a list of all surahs.
+- /api/v2/surat/:nomor: Get details of a specific surah.
+- /api/v2/tafsir/:nomor: Get tafsir for a specific ayah.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Usage
+- View Surahs: Open the app to view a list of all surahs.
+- View Ayahs: Select a surah to view its ayahs.
+- View Tafsir: Read tafsir for each ayah by selecting it.
+- Play Audio: Play audio recitation for each surah.
+
+<br>
+
+Thank you for using Alquran Digital. We hope it helps you in your spiritual journey.
+
+Best regards,
+
+Asbiq Al Alawi
