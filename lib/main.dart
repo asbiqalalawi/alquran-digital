@@ -1,5 +1,5 @@
 import 'package:alquran_digital/app/view/atom/color_atom.dart';
-import 'package:alquran_digital/app/view/atom/route/route.dart';
+import 'package:alquran_digital/app/route/route.dart';
 import 'package:alquran_digital/bloc/surat_bloc.dart';
 import 'package:alquran_digital/bloc/surat_detail_bloc.dart';
 import 'package:alquran_digital/bloc/tafsir_bloc.dart';

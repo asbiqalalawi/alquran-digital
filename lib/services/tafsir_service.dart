@@ -1,4 +1,4 @@
-import 'package:alquran_digital/app/view/atom/const/service_const.dart';
+import 'package:alquran_digital/app/const/service_const.dart';
 import 'package:alquran_digital/models/surat_model.dart';
 
 class TafsirService {
