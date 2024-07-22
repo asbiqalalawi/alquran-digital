@@ -1,0 +1,91 @@
+import 'package:alquran_digital/app/view/atom/color_atom.dart';
+import 'package:alquran_digital/models/surat_model.dart';
+import 'package:flutter/material.dart';
+
+class AyatMolecule extends StatelessWidget {
+  const AyatMolecule({
+    super.key,
+    this.ayat,
+  });
+
+  final AyatModel? ayat;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          decoration: const ShapeDecoration(
+            shape: StarBorder(
+              points: 10.00,
+              rotation: 0.00,
+              innerRadiusRatio: 0.70,
+              valleyRounding: 0.60,
+              side: BorderSide(
+                color: ColorAtom.purple,
+              ),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: SizedBox(
+              width: 24,
+              child: Text(
+                '${ayat?.nomorAyat ?? 0}',
+                style: const TextStyle(
+                  color: ColorAtom.white,
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  ayat?.teksArab ?? '',
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  ayat?.teksLatin ?? '',
+                  textAlign: TextAlign.justify,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: ColorAtom.purple,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  ayat?.teksIndonesia ?? '',
+                  textAlign: TextAlign.justify,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: ColorAtom.grey,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
