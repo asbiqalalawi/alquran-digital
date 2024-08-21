@@ -1,4 +1,5 @@
 import 'package:alquran_digital/view/pages/home_page.dart';
+import 'package:alquran_digital/view/pages/login_page.dart';
 import 'package:alquran_digital/view/pages/surat_detail_page.dart';
 import 'package:alquran_digital/view/pages/tafsir_page.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,13 @@ final GoRouter router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
+      name: 'login',
+      builder: (BuildContext context, GoRouterState state) {
+        return const LoginPage();
+      },
+    ),
+    GoRoute(
+      path: '/home',
       name: 'home',
       builder: (BuildContext context, GoRouterState state) {
         return const HomePage();
