@@ -60,3 +60,8 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // Add the biometric dependency here
+    implementation 'androidx.biometric:biometric:1.2.0-alpha04'
+}
