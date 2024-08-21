@@ -1,14 +1,20 @@
+import 'package:flutter/material.dart';
 import 'package:alquran_digital/app/view/atom/color_atom.dart';
 import 'package:alquran_digital/models/surat_model.dart';
-import 'package:flutter/material.dart';
 
 class AyatMolecule extends StatelessWidget {
   const AyatMolecule({
     super.key,
     this.ayat,
+    required this.onPlay,
+    required this.onPause,
+    required this.isPlaying,
   });
 
   final AyatModel? ayat;
+  final VoidCallback onPlay;
+  final VoidCallback onPause;
+  final bool isPlaying;
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +90,18 @@ class AyatMolecule extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        const SizedBox(width: 4),
+        IconButton(
+          icon: Icon(isPlaying ? Icons.stop_circle : Icons.play_circle),
+          onPressed: () {
+            if (isPlaying) {
+              onPause();
+            } else {
+              onPlay();
+            }
+          },
+          color: ColorAtom.green,
         ),
       ],
     );

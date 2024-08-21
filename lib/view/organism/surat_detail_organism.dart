@@ -4,8 +4,8 @@ import 'package:alquran_digital/models/surat_model.dart';
 import 'package:alquran_digital/view/molecule/ayat_moelcule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:go_router/go_router.dart';
 
 class SuratDetailOrganism extends StatefulWidget {
   const SuratDetailOrganism({
@@ -23,17 +23,70 @@ class _SuratDetailOrganismState extends State<SuratDetailOrganism> {
   final player = AudioPlayer();
   bool playing = false;
   double volume = 1.0;
+  int currentAyatIndex = 0;
+  bool isPlaying = false;
 
   @override
   void initState() {
     super.initState();
-    player.setUrl(widget.surat.audioFull?.values.first ?? '');
+    // _playAyat(currentAyatIndex);
+
+    player.playbackEventStream.listen((event) {
+      if (player.processingState == ProcessingState.completed) {
+        _playNextAyat();
+      }
+    });
   }
 
   @override
   void dispose() {
     player.dispose();
     super.dispose();
+  }
+
+  Future<void> _playAyat(int index) async {
+    if (index < (widget.surat.ayat?.length ?? 0)) {
+      final ayat = widget.surat.ayat![index];
+      final audioUrl = ayat.audio.values.first;
+
+      if (audioUrl.isNotEmpty) {
+        if (playing) {
+          await player.stop();
+        }
+        try {
+          setState(() {
+            playing = true;
+            currentAyatIndex = index;
+          });
+          await player.setUrl(audioUrl);
+          await player.play();
+        } catch (e) {
+          SnackBar(content: Text('Error loading audio: $e'));
+        }
+      } else {
+        const SnackBar(content: Text('Audio URL is null or empty'));
+      }
+    }
+  }
+
+  void _playNextAyat() {
+    if (currentAyatIndex + 1 < (widget.surat.ayat?.length ?? 0)) {
+      _playAyat(currentAyatIndex + 1);
+    } else {
+      setState(() {
+        playing = false;
+        currentAyatIndex = -1;
+      });
+    }
+  }
+
+  void _pauseAyat() async {
+    if (playing) {
+      await player.pause();
+      setState(() {
+        playing = false;
+      });
+    }
   }
 
   @override
@@ -193,10 +246,9 @@ class _SuratDetailOrganismState extends State<SuratDetailOrganism> {
                                   if (playing) {
                                     player.stop();
                                     playing = false;
+                                    isPlaying = false;
                                   } else {
-                                    player.seek(Duration.zero);
-                                    player.play();
-                                    playing = true;
+                                    _playAyat(currentAyatIndex);
                                   }
                                 });
                               },
@@ -214,13 +266,13 @@ class _SuratDetailOrganismState extends State<SuratDetailOrganism> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      playing ? Icons.stop : Icons.play_arrow_rounded,
+                                      playing ? Icons.pause : Icons.play_arrow_rounded,
                                       color: ColorAtom.white,
                                       size: 16,
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
-                                      playing ? 'Stop Audio' : 'Play Audio',
+                                      playing ? 'Pause Audio' : 'Play Audio',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 12,
@@ -237,7 +289,16 @@ class _SuratDetailOrganismState extends State<SuratDetailOrganism> {
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemBuilder: (context, index) => AyatMolecule(ayat: widget.surat.ayat?[index]),
+                        itemBuilder: (context, index) => AyatMolecule(
+                          ayat: widget.surat.ayat?[index],
+                          isPlaying: currentAyatIndex == index && playing,
+                          onPlay: () {
+                            _playAyat(index);
+                          },
+                          onPause: () {
+                            _pauseAyat();
+                          },
+                        ),
                         itemCount: widget.surat.ayat?.length ?? 0,
                         separatorBuilder: (context, index) => const SizedBox(height: 20),
                       ),
@@ -262,14 +323,16 @@ class _SuratDetailOrganismState extends State<SuratDetailOrganism> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        volume -= 0.5;
+                        volume -= 0.1;
+                        if (volume < 0.0) volume = 0.0;
                         player.setVolume(volume);
                       },
                       icon: const Icon(Icons.volume_down),
                     ),
                     IconButton(
                       onPressed: () {
-                        volume += 0.5;
+                        volume += 0.1;
+                        if (volume > 1.0) volume = 1.0;
                         player.setVolume(volume);
                       },
                       icon: const Icon(Icons.volume_up),
@@ -277,20 +340,9 @@ class _SuratDetailOrganismState extends State<SuratDetailOrganism> {
                     IconButton(
                       onPressed: () {
                         setState(() {
-                          if (player.playing) {
-                            player.pause();
-                          } else {
-                            player.play();
-                          }
-                        });
-                      },
-                      icon: player.playing ? const Icon(Icons.pause) : const Icon(Icons.play_arrow),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
                           player.stop();
                           playing = false;
+                          isPlaying = false;
                         });
                       },
                       icon: const Icon(Icons.stop),
